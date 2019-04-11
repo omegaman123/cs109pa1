@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CLionExternalBuildManager">
+    <target id="50359f30-c630-450d-b1b7-20b76ca22ac8" name="CMPS109-1" projectName="CS109PA1">
+      <configuration id="424f2dfd-5508-433c-b299-34ff80afc4f4" name="CMPS109-1">
+        <build type="TOOL">
+          <tool actionId="Tool_External Tools_make" />
+        </build>
+        <clean type="TOOL">
+          <tool actionId="Tool_External Tools_make clean" />
+        </clean>
+      </configuration>
+    </target>
+  </component>
+</project>
