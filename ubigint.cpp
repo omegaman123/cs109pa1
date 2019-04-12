@@ -40,7 +40,34 @@ ubigint::ubigint(const string &that) : uvalue(0), ubig_value{} {
 
 
 ubigint ubigint::operator+(const ubigint &that) const {
-    return ubigint(uvalue + that.uvalue);
+    udigit_t cout = 0;
+    uint counter = 0;
+    ubigint res;
+    for (udigit_t digit:this->ubig_value) {
+        udigit_t addVal;
+        if (counter > that.ubig_value.size()) {
+            addVal = 0;
+        } else {
+            addVal = that.ubig_value[counter];
+        }
+
+        udigit_t val = addVal + digit + cout;
+        cout = val / 10;
+        val %= 10;
+        res.ubig_value.push_back(val);
+        ++counter;
+    }
+    if (cout > 0) {
+        res.ubig_value.push_back(cout);
+    }
+
+    while (res.ubig_value.size() > 0 and res.ubig_value.back() == 0) {
+        res.ubig_value.pop_back();
+    }
+
+    res.uvalue = this->uvalue + that.uvalue;
+    return res;
+
 }
 
 ubigint ubigint::operator-(const ubigint &that) const {
@@ -105,7 +132,12 @@ bool ubigint::operator<(const ubigint &that) const {
     return uvalue < that.uvalue;
 }
 
-ostream &operator<<(ostream &out, const ubigint &that) {
-    return out << "ubigint(" << that.uvalue << ")";
+ostream& operator<< (ostream& out, const ubigint& that) {
+    std::string s;
+    for(size_t i = 0; i < that.ubig_value.size(); ++i)
+    {
+        s += std::to_string(that.ubig_value[i]);
+    }
+    return out << "ubigint(" << that.uvalue << ", " << s << ")";
 }
 
