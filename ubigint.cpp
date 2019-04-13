@@ -75,7 +75,7 @@ ubigint ubigint::operator+(const ubigint &that) const {
         res.ubig_value.push_back(cout);
     }
 
-    while (res.ubig_value.size() > 0 and res.ubig_value.back() == 0) {
+    while (res.ubig_value.size() > 1 and res.ubig_value.back() == 0) {
         res.ubig_value.pop_back();
     }
 
@@ -157,6 +157,9 @@ ubigint ubigint::operator*(const ubigint &that) const {
                 currentplace.ubig_value.push_back(placeVal);
             }
         }
+        if (cout > 0) {
+            currentplace.ubig_value.push_back(cout);
+        }
         res = res + currentplace;
         ++place;
     }
@@ -165,11 +168,28 @@ ubigint ubigint::operator*(const ubigint &that) const {
 }
 
 void ubigint::multiply_by_2() {
-    uvalue *= 2;
+    ubigint two = ubigint(2);
+    ubigint res = two * *this;
+    this->ubig_value = res.ubig_value;
+    this->uvalue *= 2;
 }
 
 void ubigint::divide_by_2() {
     uvalue /= 2;
+    ubigvalue_t res;
+    auto rit = this->ubig_value.rbegin();
+    udigit_t rem = 0;
+    for (; rit != this->ubig_value.rend(); ++rit) {
+        udigit_t quo = ((rem * 10) + *rit) / 2;
+        rem = ((rem * 10) + *rit) % 2;
+        res.push_back(quo);
+    }
+
+    std::reverse(res.begin(), res.end());
+    while (res.size() > 1 and res.back() == 0) {
+        res.pop_back();
+    }
+    this->ubig_value = res;
 }
 
 
