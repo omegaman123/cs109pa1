@@ -40,15 +40,23 @@ ubigint::ubigint(const string &that) : uvalue(0), ubig_value{} {
 
 
 ubigint ubigint::operator+(const ubigint &that) const {
+
+    ubigint first = *this;
+    ubigint second = that;
+    if (this->ubig_value.size() < that.ubig_value.size()){
+        second = *this;
+        first = that;
+    }
+
     udigit_t cout = 0;
     uint counter = 0;
     ubigint res;
-    for (udigit_t digit:this->ubig_value) {
+    for (udigit_t digit:first.ubig_value) {
         udigit_t addVal;
-        if (counter > that.ubig_value.size()) {
+        if (counter >= second.ubig_value.size()) {
             addVal = 0;
         } else {
-            addVal = that.ubig_value[counter];
+            addVal = second.ubig_value[counter];
         }
 
         udigit_t val = addVal + digit + cout;
@@ -134,9 +142,10 @@ bool ubigint::operator<(const ubigint &that) const {
 
 ostream& operator<< (ostream& out, const ubigint& that) {
     std::string s;
-    for(size_t i = 0; i < that.ubig_value.size(); ++i)
+    vector<ubigint::udigit_t>::const_reverse_iterator rit = that.ubig_value.rbegin();
+    for (; rit!= that.ubig_value.rend(); ++rit)
     {
-        s += std::to_string(that.ubig_value[i]);
+        s += std::to_string(*rit);
     }
     return out << "ubigint(" << that.uvalue << ", " << s << ")";
 }
