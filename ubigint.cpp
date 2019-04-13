@@ -43,7 +43,7 @@ ubigint ubigint::operator+(const ubigint &that) const {
 
     ubigint first = *this;
     ubigint second = that;
-    if (this->ubig_value.size() < that.ubig_value.size()){
+    if (this->ubig_value.size() < that.ubig_value.size()) {
         second = *this;
         first = that;
     }
@@ -80,7 +80,41 @@ ubigint ubigint::operator+(const ubigint &that) const {
 
 ubigint ubigint::operator-(const ubigint &that) const {
     if (*this < that) throw domain_error("ubigint::operator-(a<b)");
-    return ubigint(uvalue - that.uvalue);
+//    return ubigint(uvalue - that.uvalue);
+    ubigint res;
+    res.uvalue = uvalue - that.uvalue;
+    ubigint first = *this;
+    ubigint second = that;
+
+    udigit_t cout = 0;
+    uint counter = 0;
+    for (udigit_t digit:first.ubig_value) {
+        udigit_t subval;
+        if (counter >= second.ubig_value.size()) {
+            subval = 0;
+        } else {
+            subval = second.ubig_value[counter];
+        }
+        udigit_t val;
+        if (digit < (subval + cout)){
+            val = (digit + 10) - cout - subval;
+            cout = 1;
+        } else {
+             val = digit - subval - cout;
+            cout = 0;
+        }
+
+        ++counter;
+        res.ubig_value.push_back(val);
+    }
+
+    while (res.ubig_value.size() > 1 and res.ubig_value.back() == 0) {
+        res.ubig_value.pop_back();
+    }
+
+
+    return res;
+
 }
 
 ubigint ubigint::operator*(const ubigint &that) const {
@@ -140,11 +174,10 @@ bool ubigint::operator<(const ubigint &that) const {
     return uvalue < that.uvalue;
 }
 
-ostream& operator<< (ostream& out, const ubigint& that) {
+ostream &operator<<(ostream &out, const ubigint &that) {
     std::string s;
     vector<ubigint::udigit_t>::const_reverse_iterator rit = that.ubig_value.rbegin();
-    for (; rit!= that.ubig_value.rend(); ++rit)
-    {
+    for (; rit != that.ubig_value.rend(); ++rit) {
         s += std::to_string(*rit);
     }
     return out << "ubigint(" << that.uvalue << ", " << s << ")";
