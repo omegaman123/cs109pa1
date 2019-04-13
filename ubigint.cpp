@@ -26,7 +26,7 @@ ubigint::ubigint(unsigned long that) : ubig_value{} {
 
 
 ubigint::ubigint(const string &that) : ubig_value{} {
-    DEBUGF ('~', "that = \"" << that << "\"");
+    DEBUGF ('~', "that = \"" << that << "\"")
     for (char digit:that) {
         if (not isdigit(digit)) {
             throw invalid_argument("ubigint::ubigint(" + that + ")");
@@ -47,7 +47,7 @@ ubigint ubigint::operator+(const ubigint &that) const {
         first = that;
     }
 
-    udigit_t cout = 0;
+    udigit_t carryout = 0;
     uint counter = 0;
     ubigint res;
     for (udigit_t digit:first.ubig_value) {
@@ -58,14 +58,14 @@ ubigint ubigint::operator+(const ubigint &that) const {
             addVal = second.ubig_value[counter];
         }
 
-        udigit_t val = addVal + digit + cout;
-        cout = val / 10;
+        udigit_t val = addVal + digit + carryout;
+        carryout = val / 10;
         val %= 10;
         res.ubig_value.push_back(val);
         ++counter;
     }
-    if (cout > 0) {
-        res.ubig_value.push_back(cout);
+    if (carryout > 0) {
+        res.ubig_value.push_back(carryout);
     }
 
     while (res.ubig_value.size() > 1 and res.ubig_value.back() == 0) {
@@ -82,7 +82,7 @@ ubigint ubigint::operator-(const ubigint &that) const {
     ubigint first = *this;
     ubigint second = that;
 
-    udigit_t cout = 0;
+    udigit_t carryout = 0;
     uint counter = 0;
     for (udigit_t digit:first.ubig_value) {
         udigit_t subval;
@@ -92,12 +92,12 @@ ubigint ubigint::operator-(const ubigint &that) const {
             subval = second.ubig_value[counter];
         }
         udigit_t val;
-        if (digit < (subval + cout)) {
-            val = (digit + 10) - cout - subval;
-            cout = 1;
+        if (digit < (subval + carryout)) {
+            val = (digit + 10) - carryout - subval;
+            carryout = 1;
         } else {
-            val = digit - subval - cout;
-            cout = 0;
+            val = digit - subval - carryout;
+            carryout = 0;
         }
 
         ++counter;
@@ -131,22 +131,22 @@ ubigint ubigint::operator*(const ubigint &that) const {
         for (uint i = 0; i < place; ++i) {
             currentplace.ubig_value.push_back(0);
         }
-        uint cout = 0;
+        uint carryout = 0;
         for (udigit_t firDigit:first.ubig_value) {
             udigit_t product = firDigit * secDigit;
             udigit_t val = product % 10;
-            udigit_t placeVal = val + cout;
-            cout = (product / 10);
+            udigit_t placeVal = val + carryout;
+            carryout = (product / 10);
             if (placeVal > 10) {
                 udigit_t newPlaceVal = placeVal % 10;
-                cout = cout + placeVal / 10;
+                carryout = carryout + placeVal / 10;
                 currentplace.ubig_value.push_back(newPlaceVal);
             } else {
                 currentplace.ubig_value.push_back(placeVal);
             }
         }
-        if (cout > 0) {
-            currentplace.ubig_value.push_back(cout);
+        if (carryout > 0) {
+            currentplace.ubig_value.push_back(carryout);
         }
         res = res + currentplace;
         ++place;
@@ -217,16 +217,38 @@ ubigint ubigint::operator%(const ubigint &that) const {
 }
 
 bool ubigint::operator==(const ubigint &that) const {
+    if (this->ubig_value.size() != that.ubig_value.size()){
+        return false;
+    }
+    for(uint i=0; i < this->ubig_value.size(); ++i){
+        if (this->ubig_value[i] != that.ubig_value[i]){
+            return false;
+        }
+    }
     return true;
 }
 
 bool ubigint::operator<(const ubigint &that) const {
+    if (this->ubig_value.size() < that.ubig_value.size()){
+        return true;
+    }
+    if (this->ubig_value.size() > that.ubig_value.size()){
+        return false;
+    }
+    for (int i = this->ubig_value.size() - 1; i >= 0 ; --i) {
+        if (this->ubig_value[i] < that.ubig_value[i]){
+            return true;
+        }
+        if (this->ubig_value[i] > that.ubig_value[i]){
+            return false;
+        }
+    }
     return false;
 }
 
 ostream &operator<<(ostream &out, const ubigint &that) {
     std::string s;
-    vector<ubigint::udigit_t>::const_reverse_iterator rit = that.ubig_value.rbegin();
+    auto rit = that.ubig_value.rbegin();
     for (; rit != that.ubig_value.rend(); ++rit) {
         s += std::to_string(*rit);
     }
