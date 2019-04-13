@@ -12,8 +12,7 @@ using namespace std;
 #include "ubigint.h"
 #include "debug.h"
 
-ubigint::ubigint(unsigned long that) : uvalue(that), ubig_value{} {
-    DEBUGF ('~', this << " -> " << uvalue)
+ubigint::ubigint(unsigned long that) : ubig_value{} {
 
     if (that == 0) {
         ubig_value.push_back(0);
@@ -26,14 +25,8 @@ ubigint::ubigint(unsigned long that) : uvalue(that), ubig_value{} {
 }
 
 
-ubigint::ubigint(const string &that) : uvalue(0), ubig_value{} {
+ubigint::ubigint(const string &that) : ubig_value{} {
     DEBUGF ('~', "that = \"" << that << "\"");
-    for (char digit: that) {
-        if (not isdigit(digit)) {
-            throw invalid_argument("ubigint::ubigint(" + that + ")");
-        }
-        uvalue = uvalue * 10 + digit - '0';
-    }
     for (char digit:that) {
         if (not isdigit(digit)) {
             throw invalid_argument("ubigint::ubigint(" + that + ")");
@@ -79,16 +72,13 @@ ubigint ubigint::operator+(const ubigint &that) const {
         res.ubig_value.pop_back();
     }
 
-    res.uvalue = this->uvalue + that.uvalue;
     return res;
 
 }
 
 ubigint ubigint::operator-(const ubigint &that) const {
     if (*this < that) throw domain_error("ubigint::operator-(a<b)");
-//    return ubigint(uvalue - that.uvalue);
     ubigint res;
-    res.uvalue = uvalue - that.uvalue;
     ubigint first = *this;
     ubigint second = that;
 
@@ -124,10 +114,8 @@ ubigint ubigint::operator-(const ubigint &that) const {
 }
 
 ubigint ubigint::operator*(const ubigint &that) const {
-    //return ubigint(uvalue * that.uvalue);
 
     ubigint res = ubigint(0);
-    res.uvalue = uvalue * that.uvalue;
     ubigint first = *this;
     ubigint second = that;
 
@@ -171,11 +159,10 @@ void ubigint::multiply_by_2() {
     ubigint two = ubigint(2);
     ubigint res = two * *this;
     this->ubig_value = res.ubig_value;
-    this->uvalue *= 2;
+
 }
 
 void ubigint::divide_by_2() {
-    uvalue /= 2;
     ubigvalue_t res;
     auto rit = this->ubig_value.rbegin();
     udigit_t rem = 0;
@@ -230,11 +217,11 @@ ubigint ubigint::operator%(const ubigint &that) const {
 }
 
 bool ubigint::operator==(const ubigint &that) const {
-    return uvalue == that.uvalue;
+    return true;
 }
 
 bool ubigint::operator<(const ubigint &that) const {
-    return uvalue < that.uvalue;
+    return false;
 }
 
 ostream &operator<<(ostream &out, const ubigint &that) {
@@ -243,6 +230,6 @@ ostream &operator<<(ostream &out, const ubigint &that) {
     for (; rit != that.ubig_value.rend(); ++rit) {
         s += std::to_string(*rit);
     }
-    return out << "ubigint(" << that.uvalue << ", " << s << ")";
+    return out << "ubigint(" << s << ")";
 }
 
