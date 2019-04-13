@@ -14,11 +14,17 @@ using namespace std;
 
 ubigint::ubigint(unsigned long that) : uvalue(that), ubig_value{} {
     DEBUGF ('~', this << " -> " << uvalue)
-    while (that > 0) {
-        ubig_value.push_back((that % 10));
-        that /= 10;
+
+    if (that == 0) {
+        ubig_value.push_back(0);
+    } else {
+        while (that > 0) {
+            ubig_value.push_back((that % 10));
+            that /= 10;
+        }
     }
 }
+
 
 ubigint::ubigint(const string &that) : uvalue(0), ubig_value{} {
     DEBUGF ('~', "that = \"" << that << "\"");
@@ -96,11 +102,11 @@ ubigint ubigint::operator-(const ubigint &that) const {
             subval = second.ubig_value[counter];
         }
         udigit_t val;
-        if (digit < (subval + cout)){
+        if (digit < (subval + cout)) {
             val = (digit + 10) - cout - subval;
             cout = 1;
         } else {
-             val = digit - subval - cout;
+            val = digit - subval - cout;
             cout = 0;
         }
 
@@ -118,7 +124,44 @@ ubigint ubigint::operator-(const ubigint &that) const {
 }
 
 ubigint ubigint::operator*(const ubigint &that) const {
-    return ubigint(uvalue * that.uvalue);
+    //return ubigint(uvalue * that.uvalue);
+
+    ubigint res = ubigint(0);
+    res.uvalue = uvalue * that.uvalue;
+    ubigint first = *this;
+    ubigint second = that;
+
+    if (this->ubig_value.size() < that.ubig_value.size()) {
+        second = *this;
+        first = that;
+    }
+
+    uint place = 0;
+    for (udigit_t secDigit:second.ubig_value) {
+
+        ubigint currentplace;
+        for (uint i = 0; i < place; ++i) {
+            currentplace.ubig_value.push_back(0);
+        }
+        uint cout = 0;
+        for (udigit_t firDigit:first.ubig_value) {
+            udigit_t product = firDigit * secDigit;
+            udigit_t val = product % 10;
+            udigit_t placeVal = val + cout;
+            cout = (product / 10);
+            if (placeVal > 10) {
+                udigit_t newPlaceVal = placeVal % 10;
+                cout = cout + placeVal / 10;
+                currentplace.ubig_value.push_back(newPlaceVal);
+            } else {
+                currentplace.ubig_value.push_back(placeVal);
+            }
+        }
+        res = res + currentplace;
+        ++place;
+    }
+
+    return res;
 }
 
 void ubigint::multiply_by_2() {
