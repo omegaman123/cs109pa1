@@ -252,6 +252,6 @@ ostream &operator<<(ostream &out, const ubigint &that) {
     for (; rit != that.ubig_value.rend(); ++rit) {
         s += std::to_string(*rit);
     }
-    return out << "ubigint(" << s << ")";
+    return out << s;
 }
 

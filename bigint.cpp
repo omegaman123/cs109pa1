@@ -72,24 +72,84 @@ bigint bigint::operator+(const bigint &that) const {
 }
 
 bigint bigint::operator-(const bigint &that) const {
-    ubigint result = uvalue - that.uvalue;
-    return result;
+    if (!this->is_negative and !that.is_negative) {
+        bigint res;
+        if (this->uvalue > that.uvalue) {
+            res.uvalue = this->uvalue - that.uvalue;
+            res.is_negative = false;
+        } else if (this->uvalue == that.uvalue) {
+            res = bigint(0);
+        } else {
+            res.uvalue = that.uvalue - this->uvalue;
+            res.is_negative = true;
+        }
+        return res;
+    }
+    if (!this->is_negative and that.is_negative){
+        bigint res;
+        res.uvalue = this->uvalue + that.uvalue;
+        res.is_negative = false;
+        return res;
+    }
+    if (this->is_negative and !that.is_negative){
+        bigint res;
+        res.uvalue = this->uvalue + that.uvalue;
+        res.is_negative = true;
+        return res;
+    }
+    bigint res;
+    if (this->uvalue > that.uvalue){
+        res.uvalue = this->uvalue - that.uvalue;
+        res.is_negative = true;
+    } else if (this->uvalue == that.uvalue){
+        res = bigint(0);
+    } else {
+        res.uvalue = that.uvalue - this->uvalue;
+        res.is_negative = false;
+    }
+    return res;
+
 }
 
 
 bigint bigint::operator*(const bigint &that) const {
-    bigint result = uvalue * that.uvalue;
-    return result;
+   bigint res;
+   if (this->is_negative and that.is_negative){
+       res.is_negative = false;
+   } else if(!this->is_negative and !that.is_negative){
+       res.is_negative = false;
+   } else {
+       res.is_negative = true;
+   }
+   res.uvalue = this->uvalue * that.uvalue;
+   return res;
+
 }
 
 bigint bigint::operator/(const bigint &that) const {
-    bigint result = uvalue / that.uvalue;
-    return result;
+    bigint res;
+    if (this->is_negative and that.is_negative){
+        res.is_negative = false;
+    } else if(!this->is_negative and !that.is_negative){
+        res.is_negative = false;
+    } else {
+        res.is_negative = true;
+    }
+    res.uvalue = this->uvalue / that.uvalue;
+    return res;
 }
 
 bigint bigint::operator%(const bigint &that) const {
-    bigint result = uvalue % that.uvalue;
-    return result;
+    bigint res;
+
+    if (this->uvalue == that.uvalue){
+        res.is_negative = false;
+    } else {
+        res.is_negative = this->is_negative;
+    }
+
+    res.uvalue = this->uvalue % that.uvalue;
+    return res;
 }
 
 bool bigint::operator==(const bigint &that) const {
@@ -103,7 +163,6 @@ bool bigint::operator<(const bigint &that) const {
 }
 
 ostream &operator<<(ostream &out, const bigint &that) {
-    return out << "bigint(" << (that.is_negative ? "-" : "+")
-               << "," << that.uvalue << ")";
+    return out << (that.is_negative ? "-": "") << that.uvalue;
 }
 
