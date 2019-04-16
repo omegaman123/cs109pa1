@@ -10,19 +10,14 @@ add_executable(CS109PA1
         bigint.h
         debug.cpp
         debug.h
-        HEADER.html
         iterstack.h
         libfns.cpp
         libfns.h
-        Listing.pdf
-        Listing.ps
         main.cpp
-        Makefile
         relops.h
         scanner.cpp
         scanner.h
         ubigint.cpp
         ubigint.h
         util.cpp
-        util.h
-        ydc)
+        util.h)

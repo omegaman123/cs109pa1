@@ -86,18 +86,6 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/mark/mac/Desktop/CMPS109/CS109PA1/HEADER.html">
-			<Option target="CS109PA1"/>
-		</Unit>
-		<Unit filename="/home/mark/mac/Desktop/CMPS109/CS109PA1/Listing.pdf">
-			<Option target="CS109PA1"/>
-		</Unit>
-		<Unit filename="/home/mark/mac/Desktop/CMPS109/CS109PA1/Listing.ps">
-			<Option target="CS109PA1"/>
-		</Unit>
-		<Unit filename="/home/mark/mac/Desktop/CMPS109/CS109PA1/Makefile">
-			<Option target="CS109PA1"/>
-		</Unit>
 		<Unit filename="/home/mark/mac/Desktop/CMPS109/CS109PA1/bigint.cpp">
 			<Option target="CS109PA1"/>
 		</Unit>
@@ -141,9 +129,6 @@
 			<Option target="CS109PA1"/>
 		</Unit>
 		<Unit filename="/home/mark/mac/Desktop/CMPS109/CS109PA1/util.h">
-			<Option target="CS109PA1"/>
-		</Unit>
-		<Unit filename="/home/mark/mac/Desktop/CMPS109/CS109PA1/ydc">
 			<Option target="CS109PA1"/>
 		</Unit>
 		<Unit filename="/home/mark/mac/Desktop/CMPS109/CS109PA1/CMakeLists.txt">

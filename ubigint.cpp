@@ -217,11 +217,11 @@ ubigint ubigint::operator%(const ubigint &that) const {
 }
 
 bool ubigint::operator==(const ubigint &that) const {
-    if (this->ubig_value.size() != that.ubig_value.size()){
+    if (this->ubig_value.size() != that.ubig_value.size()) {
         return false;
     }
-    for(uint i=0; i < this->ubig_value.size(); ++i){
-        if (this->ubig_value[i] != that.ubig_value[i]){
+    for (uint i = 0; i < this->ubig_value.size(); ++i) {
+        if (this->ubig_value[i] != that.ubig_value[i]) {
             return false;
         }
     }
@@ -229,17 +229,17 @@ bool ubigint::operator==(const ubigint &that) const {
 }
 
 bool ubigint::operator<(const ubigint &that) const {
-    if (this->ubig_value.size() < that.ubig_value.size()){
+    if (this->ubig_value.size() < that.ubig_value.size()) {
         return true;
     }
-    if (this->ubig_value.size() > that.ubig_value.size()){
+    if (this->ubig_value.size() > that.ubig_value.size()) {
         return false;
     }
-    for (int i = this->ubig_value.size() - 1; i >= 0 ; --i) {
-        if (this->ubig_value[i] < that.ubig_value[i]){
+    for (int i = this->ubig_value.size() - 1; i >= 0; --i) {
+        if (this->ubig_value[i] < that.ubig_value[i]) {
             return true;
         }
-        if (this->ubig_value[i] > that.ubig_value[i]){
+        if (this->ubig_value[i] > that.ubig_value[i]) {
             return false;
         }
     }
@@ -249,8 +249,14 @@ bool ubigint::operator<(const ubigint &that) const {
 ostream &operator<<(ostream &out, const ubigint &that) {
     std::string s;
     auto rit = that.ubig_value.rbegin();
+    int counter = 0;
     for (; rit != that.ubig_value.rend(); ++rit) {
+        if (counter == 69) {
+            s += "\\\n";
+            counter = 0;
+        }
         s += std::to_string(*rit);
+        ++counter;
     }
     return out << s;
 }
